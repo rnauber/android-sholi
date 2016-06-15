@@ -18,10 +18,13 @@
 package name.soulayrol.rhaa.sholi;
 
 import android.app.FragmentTransaction;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -52,6 +55,8 @@ public class CheckingFragment extends AbstractListFragment implements
     private InterceptorFrameLayout _interceptor;
 
     private Map<Integer, String> _defaultActionClassNames;
+
+    private static final String TAG_IMPORT_DIALOG = "import_dialog";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -118,12 +123,24 @@ public class CheckingFragment extends AbstractListFragment implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        FragmentTransaction transaction;
         switch (item.getItemId()) {
             case R.id.action_edit:
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.container, new EditFragment());
                 transaction.addToBackStack(null);
                 transaction.commit();
+                return true;
+            case R.id.action_paste:
+                ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                CharSequence pasteData = clipboard.getPrimaryClip().getItemAt(0).getText();
+                if (pasteData != null) {
+                    Log.i("Clipboard: ",pasteData.toString());
+                    transaction = getFragmentManager().beginTransaction();
+                    if (getFragmentManager().findFragmentByTag(TAG_IMPORT_DIALOG) == null) {
+                        ImportFragment.newInstance(pasteData.toString()).show(transaction, TAG_IMPORT_DIALOG);
+                    }
+                }
                 return true;
             case R.id.action_menu:
                 getActivity().openContextMenu(_listView);

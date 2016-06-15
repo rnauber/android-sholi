@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
  ShoLi, a simple tool to produce short (shopping) lists.
 
  Copyright (C) 2013,2014,2015  David Soulayrol
@@ -17,9 +16,7 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<resources
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="MissingTranslation">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 
     <string name="app_name">ShoLi</string>
 
@@ -97,6 +94,7 @@
     <string name="fragment_data_erase_button">Erase All</string>
 
     <string name="fragment_settings_marker_error">Marker is invalid</string>
+    <string name="action_checking_paste">Paste from clipboard</string>
 
     <!-- Zero is not working as expected in plurals.
          See http://code.google.com/p/android/issues/detail?id=8287 -->
