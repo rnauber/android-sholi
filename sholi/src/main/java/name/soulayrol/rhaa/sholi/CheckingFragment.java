@@ -58,6 +58,8 @@ public class CheckingFragment extends AbstractListFragment implements
 
     private static final String TAG_IMPORT_DIALOG = "import_dialog";
 
+    private ClipboardManager _clipboard;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -98,6 +100,12 @@ public class CheckingFragment extends AbstractListFragment implements
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        _clipboard = (ClipboardManager)  context.getSystemService(Context.CLIPBOARD_SERVICE);
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.checking, menu);
     }
@@ -132,13 +140,13 @@ public class CheckingFragment extends AbstractListFragment implements
                 transaction.commit();
                 return true;
             case R.id.action_paste:
-                ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                CharSequence pasteData = clipboard.getPrimaryClip().getItemAt(0).getText();
-                if (pasteData != null) {
-                    Log.i("Clipboard: ",pasteData.toString());
-                    transaction = getFragmentManager().beginTransaction();
-                    if (getFragmentManager().findFragmentByTag(TAG_IMPORT_DIALOG) == null) {
-                        ImportFragment.newInstance(pasteData.toString()).show(transaction, TAG_IMPORT_DIALOG);
+                if (_clipboard != null) {
+                    CharSequence pasteData = _clipboard.getPrimaryClip().getItemAt(0).getText();
+                    if (pasteData != null) {
+                        transaction = getFragmentManager().beginTransaction();
+                        if (getFragmentManager().findFragmentByTag(TAG_IMPORT_DIALOG) == null) {
+                            ImportFragment.newInstance(pasteData.toString()).show(transaction, TAG_IMPORT_DIALOG);
+                        }
                     }
                 }
                 return true;
