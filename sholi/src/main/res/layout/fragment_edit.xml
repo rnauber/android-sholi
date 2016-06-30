@@ -26,8 +26,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="@string/fragment_edit_input_hint"
-        android:inputType="textShortMessage|textCapSentences"
-        android:editable="true" />
+        android:inputType="textShortMessage|textCapSentences" />
 
     <FrameLayout
         android:id="@+id/z_list_frame"

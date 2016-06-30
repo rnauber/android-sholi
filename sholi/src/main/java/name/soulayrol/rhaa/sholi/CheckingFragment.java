@@ -18,13 +18,10 @@
 package name.soulayrol.rhaa.sholi;
 
 import android.app.FragmentTransaction;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -56,9 +53,7 @@ public class CheckingFragment extends AbstractListFragment implements
 
     private Map<Integer, String> _defaultActionClassNames;
 
-    private static final String TAG_IMPORT_DIALOG = "import_dialog";
 
-    private ClipboardManager _clipboard;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,12 +95,6 @@ public class CheckingFragment extends AbstractListFragment implements
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        _clipboard = (ClipboardManager)  context.getSystemService(Context.CLIPBOARD_SERVICE);
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.checking, menu);
     }
@@ -138,17 +127,6 @@ public class CheckingFragment extends AbstractListFragment implements
                 transaction.replace(R.id.container, new EditFragment());
                 transaction.addToBackStack(null);
                 transaction.commit();
-                return true;
-            case R.id.action_paste:
-                if (_clipboard != null) {
-                    CharSequence pasteData = _clipboard.getPrimaryClip().getItemAt(0).getText();
-                    if (pasteData != null) {
-                        transaction = getFragmentManager().beginTransaction();
-                        if (getFragmentManager().findFragmentByTag(TAG_IMPORT_DIALOG) == null) {
-                            ImportFragment.newInstance(pasteData.toString()).show(transaction, TAG_IMPORT_DIALOG);
-                        }
-                    }
-                }
                 return true;
             case R.id.action_menu:
                 getActivity().openContextMenu(_listView);

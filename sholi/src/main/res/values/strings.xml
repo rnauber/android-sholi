@@ -94,7 +94,7 @@
     <string name="fragment_data_erase_button">Erase All</string>
 
     <string name="fragment_settings_marker_error">Marker is invalid</string>
-    <string name="action_checking_paste">Paste from clipboard</string>
+    <string name="action_edit_paste">Paste from clipboard</string>
 
     <!-- Zero is not working as expected in plurals.
          See http://code.google.com/p/android/issues/detail?id=8287 -->

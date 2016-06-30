@@ -18,6 +18,9 @@
 package name.soulayrol.rhaa.sholi;
 
 import android.app.ActionBar;
+import android.app.FragmentTransaction;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
@@ -44,10 +47,13 @@ import name.soulayrol.rhaa.sholi.data.model.ItemDao;
 public class EditFragment extends AbstractListFragment {
 
     private static final String BUNDLE_KEY_FILTER = "filter";
+    private static final String TAG_IMPORT_DIALOG = "import_dialog";
 
     private Button _newItemButton;
 
     private TextView _newItemEdit;
+
+    private Context _context;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,6 +97,12 @@ public class EditFragment extends AbstractListFragment {
         bar.setSubtitle(R.string.fragment_edit_title);
 
         return view;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        _context = context;
     }
 
     @Override
@@ -191,16 +203,16 @@ public class EditFragment extends AbstractListFragment {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
-            case R.id.action_erase:
-                getSession().runInTx(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (long id : getListView().getCheckedItemIds())
-                            getSession().getItemDao().deleteByKey(id);
-                    }
-                });
-                getAdapter().setLazyList(createList(getActivity()));
-                break;
+                case R.id.action_erase:
+                    getSession().runInTx(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (long id : getListView().getCheckedItemIds())
+                                getSession().getItemDao().deleteByKey(id);
+                        }
+                    });
+                    getAdapter().setLazyList(createList(getActivity()));
+                    break;
             }
             return true;
         }
@@ -209,5 +221,35 @@ public class EditFragment extends AbstractListFragment {
         public void onDestroyActionMode(ActionMode mode) {
             _newItemEdit.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.edit, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_paste: {
+                if (_context == null)
+                    return true;
+                ClipboardManager _clipboard = (ClipboardManager) _context.getSystemService(Context.CLIPBOARD_SERVICE);
+                if (_clipboard == null)
+                    return true;
+                ClipData clip = _clipboard.getPrimaryClip();
+                if (clip == null)
+                    return true;
+                CharSequence pasteData = clip.getItemAt(0).coerceToText(_context);
+                if (pasteData == null)
+                    return true;
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                if (getFragmentManager().findFragmentByTag(TAG_IMPORT_DIALOG) == null) {
+                    ImportFragment.newInstance(pasteData.toString()).show(transaction, TAG_IMPORT_DIALOG);
+                }
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
