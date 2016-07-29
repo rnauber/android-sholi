@@ -240,7 +240,10 @@ public class EditFragment extends AbstractListFragment {
                 ClipData clip = _clipboard.getPrimaryClip();
                 if (clip == null)
                     return true;
-                CharSequence pasteData = clip.getItemAt(0).coerceToText(_context);
+                ClipData.Item citem = clip.getItemAt(0);
+                if (citem == null)
+                    return true;
+                CharSequence pasteData = citem.coerceToText(_context);
                 if (pasteData == null)
                     return true;
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
