@@ -26,6 +26,12 @@
         android:orderInCategory="1"
         android:showAsAction="ifRoom" />
 
+    <item android:id="@+id/action_share"
+        android:icon="@android:drawable/ic_menu_share"
+        android:title="Share"
+        android:orderInCategory="1"
+        android:showAsAction="ifRoom" />
+
     <item android:id="@+id/action_menu"
         android:icon="@android:drawable/ic_menu_manage"
         android:title="@string/action_checking_menu"

@@ -63,7 +63,7 @@ public class CheckingFragment extends AbstractListFragment implements
 
         // It is too early to call getListView here, so we fetch the view from its ID.
         _listView = (ListView) view.findViewById(android.R.id.list);
-        _interceptor = (InterceptorFrameLayout) view;
+        //_interceptor = (InterceptorFrameLayout) view;
 
         // Preload default actions, since getResources cannot be called when the fragment
         // is detached, from onSharedPreferenceChanged. (See #13)
@@ -82,8 +82,9 @@ public class CheckingFragment extends AbstractListFragment implements
         configureGesture(InterceptorFrameLayout.Gesture.FLING_TO_RIGHT, sharedPref);
         configureGesture(InterceptorFrameLayout.Gesture.SINGLE_TAP, (String) null);
 
-        _interceptor.startInterception(this);
+        //_interceptor.startInterception(this);
 
+        getFragmentManager().beginTransaction().add(R.id.tag_fragment_container, new TagListFragment()).commit();
         return view;
     }
 
@@ -205,13 +206,13 @@ public class CheckingFragment extends AbstractListFragment implements
     }
 
     private void configureGesture(InterceptorFrameLayout.Gesture gesture, String className) {
-        try {
+/*        try {
             if (className == null)
                 _interceptor.configure(gesture, null);
             else
                 _interceptor.configure(gesture, (Action) Class.forName(className).newInstance());
         } catch (Throwable t) {
             _interceptor.ignore(gesture);
-        }
+        }*/
     }
 }
